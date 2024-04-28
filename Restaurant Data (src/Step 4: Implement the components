@@ -1,0 +1,63 @@
+import React from 'react';
+import RestaurantRow from './RestaurantRow';
+import AddRestaurantForm from './AddRestaurantForm';
+import EditRestaurantForm from './EditRestaurantForm';
+import { useState, useEffect } from 'react';
+
+const RestaurantList = () => {
+  const [restaurants, setRestaurants] = useState([]);
+  const [editingRestaurant, setEditingRestaurant] = useState(null);
+
+  useEffect(() => {
+    fetch('restaurants.json')
+      .then((response) => response.json())
+      .then((data) => setRestaurants(data));
+  }, []);
+
+  const handleAddRestaurant = (restaurant) => {
+    setRestaurants([...restaurants, restaurant]);
+  };
+
+  const handleEditRestaurant = (restaurant) => {
+    const updatedRestaurants = restaurants.map((r) =>
+      r.id === restaurant.id ? restaurant : r
+    );
+    setRestaurants(updatedRestaurants);
+    setEditingRestaurant(null);
+  };
+
+  const handleDeleteRestaurant = (id) => {
+    const updatedRestaurants = restaurants.filter((r) => r.id !== id);
+    setRestaurants(updatedRestaurants);
+  };
+
+  return (
+    <div>
+      <h1>Restaurant List</h1>
+      <AddRestaurantForm onAdd={handleAddRestaurant} />
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Pincode</th>
+            <th>Mobile Number</th>
+            <th>Email</th>
+            <th>Website</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {restaurants.map((restaurant) => (
+            <RestaurantRow
+              key={restaurant.id}
+              restaurant={restaurant}
+              onEdit={() => setEditingRestaurant(restaurant)}
+              onDelete={handleDeleteRestaurant}
+            />
+          ))}
+        </tbody>
+      </table>
+      {editingRestaurant && (
+        <EditRestaurantForm
+          restaurant={editingRestaurant}
