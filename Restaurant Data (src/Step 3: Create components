@@ -1,0 +1,5 @@
+Create the following components in the src folder:
+
+RestaurantList.js: This component will display the list of restaurants in a table format.
+AddRestaurantForm.js: This component will handle the form for adding a new restaurant.
+EditRestaurantForm.js: This component will handle the form for editing an existing restaurant.
